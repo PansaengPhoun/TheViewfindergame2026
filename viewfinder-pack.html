@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>The Viewfinder · แพ็คกระเป๋า ลุยผจญภัย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kanit:wght@600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#111111;--panel:#1A1A1A;--panel2:#242424;--stroke:#333333;
+  --gray:#5A5A5A;--gray-lt:#9A9A9A;--white:#FAFAFA;
+  --yellow:#FFD400;--yellow-deep:#E0B800;--danger:#FF5A4E;--ok:#3DDC84;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#111111}
+body{font-family:"IBM Plex Sans Thai","Inter",system-ui,sans-serif;color:var(--white);
+  background:var(--bg);overflow-x:hidden;overflow-y:auto;min-height:100dvh;position:relative}
+.disp{font-family:"Kanit",sans-serif;font-weight:700;letter-spacing:0}
+
+.bgfx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#111111}
+.topo{position:absolute;inset:-15%;opacity:.75;
+  background:
+    repeating-radial-gradient(circle at 20% 25%, transparent 0 42px, rgba(255,212,0,.07) 42px 43px),
+    repeating-radial-gradient(circle at 80% 75%, transparent 0 55px, rgba(255,255,255,.07) 55px 56px);
+  animation:drift1 70s linear infinite}
+.topo2{position:absolute;inset:-15%;opacity:.55;
+  background:repeating-radial-gradient(circle at 55% 45%, transparent 0 65px, rgba(255,212,0,.06) 65px 66px);
+  animation:drift2 95s linear infinite}
+@keyframes drift1{0%{transform:translate(0,0)}50%{transform:translate(-3%,2%)}100%{transform:translate(0,0)}}
+@keyframes drift2{0%{transform:translate(0,0)}50%{transform:translate(2.5%,-2%)}100%{transform:translate(0,0)}}
+.vignette{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 8%,transparent 30%,rgba(0,0,0,.55) 100%)}
+.dust{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);pointer-events:none}
+
+.wrap{position:relative;z-index:2;min-height:100dvh;display:flex;flex-direction:column;
+  max-width:460px;margin:0 auto;padding:22px 20px calc(22px + env(safe-area-inset-bottom))}
+.screen{display:none;animation:fade .45s cubic-bezier(.2,.7,.2,1) both}
+.screen.on{display:flex;flex:1;flex-direction:column}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.center{justify-content:center;text-align:center}
+
+.brandmark{display:flex;align-items:center;justify-content:center;gap:11px;margin-bottom:28px}
+.badge-logo{width:44px;height:44px;flex:0 0 auto}
+.brandtext{text-align:left;line-height:1.2}
+.brandtext .th{display:block;font-family:"Kanit";font-weight:700;font-size:17px;color:var(--white)}
+.brandtext .en{display:block;font-family:"Bebas Neue";font-size:10px;letter-spacing:.24em;color:var(--gray-lt)}
+
+.iglink{display:inline-flex;align-items:center;gap:7px;font-family:"IBM Plex Sans Thai";font-weight:600;
+  font-size:12.5px;color:var(--gray-lt);text-decoration:none;padding:9px 15px;border:1px solid var(--stroke);
+  border-radius:999px;background:var(--panel);margin-top:14px}
+.iglink svg{width:15px;height:15px;color:var(--gray-lt);flex:0 0 auto}
+@media(hover:hover){.iglink:hover{color:var(--white);border-color:var(--gray)}}
+.linkrow{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.linkrow .iglink{margin-top:0}
+.lineclaim{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;text-decoration:none;
+  font-family:"Kanit";font-weight:700;font-size:15.5px;color:#141414;background:#06C755;
+  padding:14px 20px;border-radius:4px;margin-top:12px;margin-bottom:14px}
+.lineclaim svg{width:19px;height:19px}
+
+.backlink{display:inline-flex;align-items:center;gap:5px;background:none;border:0;cursor:pointer;
+  font-family:"IBM Plex Sans Thai";font-weight:600;font-size:12.5px;color:var(--gray-lt);padding:0}
+@media(hover:hover){.backlink:hover{color:var(--white)}}
+
+/* ---------- How to Play ---------- */
+.steps{display:flex;flex-direction:column;gap:12px;margin:4px 0 28px;text-align:left}
+.step-card{display:flex;gap:13px;background:var(--panel);border:1px solid var(--stroke);border-radius:13px;padding:14px 15px}
+.step-card .sn{flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:var(--panel2);
+  display:flex;align-items:center;justify-content:center;font-family:"Kanit";font-weight:700;font-size:14px;color:var(--yellow)}
+.step-card .st{font-family:"Kanit";font-weight:700;font-size:15px;color:var(--white);margin-bottom:3px}
+.step-card .sd{font-family:"IBM Plex Sans Thai";font-size:12.5px;line-height:1.55;color:var(--gray-lt)}
+
+/* ---------- Trail guide ---------- */
+.trail-list{display:flex;flex-direction:column;gap:12px;margin:6px 0 22px;text-align:left}
+.trail-card{background:var(--panel);border:1px solid var(--stroke);border-radius:14px;padding:15px}
+.trail-card.featured{border-color:var(--yellow);background:rgba(255,212,0,.06)}
+.trail-head{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+.trail-head .tn{width:38px;height:38px;border-radius:9px;background:var(--panel2);flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;color:var(--gray-lt)}
+.trail-card.featured .tn{background:var(--yellow);color:#141414}
+.trail-head .tn svg{width:19px;height:19px}
+.trail-head .tt{font-family:"Kanit";font-weight:700;font-size:15.5px;color:var(--white)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:"IBM Plex Sans Thai";font-size:12px;font-weight:500;color:var(--gray-lt);
+  background:var(--panel2);border:1px solid var(--stroke);border-radius:999px;padding:6px 12px}
+.trail-card.featured .chip{color:#e8d9a0;border-color:rgba(255,212,0,.35)}
+
+.btn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;border:0;cursor:pointer;font-family:"Kanit";font-weight:700;font-size:17px;letter-spacing:0;
+  color:#141414;background:var(--yellow);padding:17px 22px;border-radius:4px;
+  box-shadow:0 14px 30px -14px rgba(255,212,0,.45);transition:transform .12s ease,box-shadow .12s ease}
+.btn:active{transform:translateY(2px) scale(.99)}
+.btn:focus-visible{outline:2px solid var(--white);outline-offset:3px}
+.btn.ghost{background:transparent;color:var(--gray-lt);box-shadow:none;font-family:"IBM Plex Sans Thai";font-weight:600;
+  font-size:14px;letter-spacing:0;padding:13px}
+.btn.ghost:active{color:var(--white)}
+.btn .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);
+  animation:rip .55s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(3.2);opacity:0}}
+@media(hover:hover){.btn:not(.ghost):hover{filter:brightness(1.05)}.btn.ghost:hover{color:var(--white)}}
+
+.kicker{font-family:"IBM Plex Sans Thai";font-weight:600;font-size:12.5px;letter-spacing:.03em;
+  color:var(--yellow);margin-bottom:16px}
+h1.hero{font-size:clamp(46px,14vw,64px);line-height:1.08;margin:0 0 4px;color:var(--white)}
+h1.hero em{font-style:normal;color:var(--yellow);display:block}
+.hero-sub{font-family:"IBM Plex Sans Thai";color:var(--gray-lt);font-size:14.5px;line-height:1.7;
+  margin:18px auto 34px;max-width:22em}
+.foot-note{margin-top:18px;font-family:"IBM Plex Sans Thai";font-size:12px;letter-spacing:.02em;color:#555}
+
+.hud-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;
+  font-family:"IBM Plex Sans Thai";font-size:12px;letter-spacing:.02em;color:var(--gray-lt)}
+.hud-top b{color:var(--white)}
+.mission-icon{width:64px;height:64px;margin:6px auto 18px;color:var(--yellow)}
+.mission-name{font-size:clamp(32px,9.5vw,44px);line-height:1.15;color:var(--white);margin:0 0 14px}
+.mission-desc{font-family:"IBM Plex Sans Thai";color:var(--gray-lt);font-size:14.5px;line-height:1.7;
+  margin:0 auto 30px;max-width:22em}
+.mission-hint{display:inline-flex;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--stroke);
+  border-radius:999px;padding:8px 16px;margin:0 auto 30px;font-family:"IBM Plex Sans Thai";font-size:12.5px;color:var(--gray-lt)}
+
+.pack-hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.timer-wrap{display:flex;align-items:center;gap:10px}
+.timer-num{font-family:"Bebas Neue";font-size:26px;color:var(--white);min-width:2.1ch;text-align:right}
+.timer-num.warn{color:var(--danger)}
+.timer-track{flex:1;height:3px;background:var(--stroke);border-radius:2px;overflow:hidden;margin:0 0 18px}
+.timer-fill{height:100%;background:var(--yellow);width:100%;transition:width .2s linear}
+.timer-fill.warn{background:var(--danger)}
+.pack-title{font-family:"Kanit";font-weight:700;font-size:22px;letter-spacing:0;margin:0 0 4px;color:var(--white)}
+.pack-mission-desc{font-family:"IBM Plex Sans Thai";font-size:12.5px;line-height:1.5;color:var(--gray-lt);margin:0 0 14px}
+.pack-sub{font-family:"IBM Plex Sans Thai";font-size:13px;color:var(--gray-lt);margin:0 0 16px}
+.slots{display:flex;gap:6px;margin-bottom:16px}
+.slot{flex:1;height:4px;border-radius:2px;background:var(--stroke)}
+.slot.filled{background:var(--yellow)}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}
+.item{position:relative;background:var(--panel);border:1.5px solid var(--stroke);border-radius:10px;
+  aspect-ratio:1/1.02;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+  cursor:pointer;padding:8px 4px;transition:border-color .15s,background .15s,transform .1s}
+.item svg{width:26px;height:26px;color:var(--gray-lt);transition:color .15s}
+.item .lb{font-family:"IBM Plex Sans Thai";font-size:11px;font-weight:600;color:var(--gray-lt);text-align:center;
+  line-height:1.25;transition:color .15s}
+.item:active{transform:scale(.96)}
+.item.selected{border-color:var(--yellow);background:rgba(255,212,0,.08)}
+.item.selected svg{color:var(--yellow)}
+.item.selected .lb{color:var(--white)}
+.item.full-block{opacity:.35;cursor:default}
+.item.shake{animation:shake .35s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.item .check{position:absolute;top:5px;right:5px;width:15px;height:15px;border-radius:50%;background:var(--yellow);
+  display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.4);transition:.2s}
+.item.selected .check{opacity:1;transform:scale(1)}
+.item .check svg{width:9px;height:9px;color:#141414}
+@media(hover:hover){.item:not(.full-block):hover{border-color:var(--gray)}}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);z-index:8;
+  background:var(--white);color:#141414;font-family:"IBM Plex Sans Thai";font-weight:600;font-size:13px;
+  padding:11px 18px;border-radius:999px;opacity:0;transition:.25s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.pack-cta{margin-top:auto}
+
+.ring-wrap{position:relative;width:180px;height:180px;margin:6px auto 20px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-num b{font-family:"Bebas Neue";font-size:52px;color:var(--white);line-height:1}
+.ring-num span{font-family:"Inter";font-size:10px;letter-spacing:.16em;color:var(--gray-lt)}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--stroke);
+  border-radius:999px;padding:9px 18px 9px 12px;margin:0 auto 8px}
+.badge .ic{width:26px;height:26px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;
+  justify-content:center;color:#141414}
+.badge .ic svg{width:14px;height:14px}
+.badge b{font-family:"Kanit";font-weight:700;font-size:15px;letter-spacing:0;color:var(--white)}
+.pers-tag{font-family:"Kanit";font-weight:600;font-size:14.5px;color:var(--yellow);margin:0 0 6px}
+.pers-sub{font-family:"IBM Plex Sans Thai";font-size:12.5px;color:var(--gray-lt);margin:0 0 22px}
+.trip-card{background:var(--panel);border:1px solid var(--stroke);border-radius:14px;padding:16px;margin-bottom:22px;
+  text-align:left;display:flex;gap:13px;align-items:center}
+.trip-card .tn{width:46px;height:46px;border-radius:10px;background:var(--panel2);flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;color:var(--yellow)}
+.trip-card .tn svg{width:22px;height:22px}
+.trip-card .tk{font-family:"IBM Plex Sans Thai";font-size:11px;letter-spacing:.04em;color:var(--gray-lt)}
+.trip-card .tt{font-family:"Kanit";font-weight:700;font-size:18px;color:var(--white);letter-spacing:0}
+
+.chest-zone{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.chest{width:150px;height:150px;cursor:pointer;position:relative}
+.chest svg{width:100%;height:100%}
+.chest .lid{transform-origin:50px 47px;transition:transform .55s cubic-bezier(.3,1.5,.4,1)}
+.chest.open .lid{transform:rotateX(125deg) translateY(-4px)}
+.chest.open .glow{opacity:1;transform:scale(1)}
+.chest.grand .glow{background:radial-gradient(circle,rgba(255,212,0,.55),transparent 70%)}
+.glow{position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(circle,rgba(255,212,0,.35),transparent 70%);
+  opacity:0;transform:scale(.5);transition:.5s ease}
+.chest-hint{font-family:"IBM Plex Sans Thai";font-size:12.5px;color:var(--gray-lt);margin-top:20px}
+.reward-pop{margin-top:26px;text-align:center;opacity:0;transform:translateY(10px);transition:.4s;max-width:280px}
+.reward-pop.on{opacity:1;transform:none}
+.reward-tag{display:inline-block;font-family:"IBM Plex Sans Thai";font-weight:600;font-size:11.5px;
+  padding:5px 13px;border-radius:999px;background:var(--panel);border:1px solid var(--stroke);color:var(--gray-lt);margin-bottom:10px}
+.reward-tag.grand{background:rgba(255,212,0,.14);border-color:var(--yellow);color:var(--yellow)}
+.reward-pop .rn{font-family:"Kanit";font-weight:700;font-size:25px;color:var(--white);margin-bottom:4px}
+.reward-pop .rc{font-family:"IBM Plex Sans Thai";font-size:11.5px;letter-spacing:.02em;color:var(--gray-lt);margin-bottom:14px}
+.quota-note{font-family:"IBM Plex Sans Thai";font-size:11.5px;line-height:1.6;color:var(--gray-lt);
+  background:rgba(255,255,255,.04);border:1px solid var(--stroke);border-radius:10px;padding:10px 14px;margin-top:12px}
+.reward-code{display:inline-block;background:var(--panel);border:1px solid var(--yellow);border-radius:8px;
+  padding:8px 16px;font-family:"Inter";font-weight:700;font-size:15px;letter-spacing:.1em;color:var(--yellow)}
+
+.passport-canvas-wrap{display:flex;justify-content:center;margin-bottom:14px}
+#passportCanvas{width:100%;max-width:300px;height:auto;border-radius:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.7)}
+#passportImg{width:100%;max-width:300px;height:auto;border-radius:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.7);
+  -webkit-touch-callout:default;user-select:none;display:block}
+.save-hint{font-family:"IBM Plex Sans Thai";font-size:12.5px;color:var(--gray-lt);text-align:center;margin:0 0 10px}
+.dl-mini{display:inline-flex;align-items:center;gap:6px;align-self:center;margin:0 0 20px;background:transparent;
+  border:1px solid var(--stroke);color:var(--gray-lt);font-family:"IBM Plex Sans Thai";font-weight:500;
+  font-size:12px;padding:6px 14px;border-radius:999px;cursor:pointer}
+@media(hover:hover){.dl-mini:hover{color:var(--white);border-color:var(--gray)}}
+.follow-label{font-family:"IBM Plex Sans Thai";font-size:13px;color:var(--gray-lt);margin:0 0 12px}
+.followig{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;text-decoration:none;
+  font-family:"Kanit";font-weight:700;font-size:16.5px;color:#141414;
+  background:linear-gradient(180deg,var(--yellow),var(--yellow-deep));padding:15px 20px;border-radius:4px;
+  box-shadow:0 10px 22px -10px rgba(255,212,0,.45);margin-bottom:10px}
+.followig svg{width:19px;height:19px}
+
+canvas.confetti{position:fixed;inset:0;z-index:6;pointer-events:none}
+@media(min-width:840px){
+  .wrap{max-width:900px}
+  #s-pack.on{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:start}
+  .grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="bgfx"><div class="topo"></div><div class="topo2"></div><div class="vignette"></div><div id="dustLayer"></div></div>
+
+<div class="wrap">
+
+  <section class="screen on center" id="s-landing">
+    <div class="brandmark">
+      <svg class="badge-logo" viewBox="0 0 100 100" aria-hidden="true">
+        <defs><clipPath id="badgeClip"><circle cx="50" cy="50" r="48"/></clipPath></defs>
+        <g clip-path="url(#badgeClip)">
+          <rect x="0" y="0" width="100" height="58" fill="#FFD400"/>
+          <rect x="0" y="58" width="100" height="42" fill="#111111"/>
+          <path d="M0 64 L22 32 L34 48 L50 16 L64 44 L80 26 L100 64 L100 100 L0 100 Z" fill="#111111"/>
+          <path d="M46 24 L54 34 L40 40 Z" fill="#FAFAFA"/>
+          <path d="M60 32 L68 40 L56 44 Z" fill="#FAFAFA" opacity=".92"/>
+        </g>
+        <circle cx="50" cy="50" r="48" fill="none" stroke="#FFD400" stroke-width="2.5"/>
+      </svg>
+      <div class="brandtext"><span class="th">ส่องรูดูวิว</span><span class="en">THE VIEWFINDER</span></div>
+    </div>
+    <div class="kicker">ประสบการณ์ผจญภัยกลางแจ้ง</div>
+    <h1 class="hero disp">แพ็คกระเป๋า<em>ลุยผจญภัย</em></h1>
+    <p class="hero-sub">การผจญภัยเริ่มต้นจากสิ่งที่คุณเลือกพกไป — เลือกของให้เหมาะกับภารกิจ แล้วไปลุ้นรางวัลกัน</p>
+    <button class="btn" id="btn-start">เริ่มผจญภัย</button>
+    <p class="foot-note">ภารกิจ 1 นาที · เล่นฟรี</p>
+    <button class="btn ghost" id="btn-trails" style="margin-top:6px">ดูแนะนำเส้นทางเดินป่า →</button>
+    <div class="linkrow">
+      <a class="iglink" href="https://www.instagram.com/theviewfinder.s/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+        @theviewfinder.s
+      </a>
+      <a class="iglink" href="https://liff.line.me/1645278921-kWRPP32q/?accountId=hus1597t" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.5 6.8 0 10-3.8 5.6l3.8 1.4-1-3.3a6.7 5.4 0 001-3.7z"/></svg>
+        เพิ่มเพื่อน LINE
+      </a>
+    </div>
+  </section>
+
+  <section class="screen" id="s-howto">
+    <div class="hud-top"><button class="backlink" id="btn-howto-back">← กลับ</button><span>THE VIEWFINDER</span></div>
+    <div class="kicker">วิธีเล่น</div>
+    <h2 class="mission-name disp" style="font-size:30px;margin-bottom:18px">4 ขั้นตอนสู่การผจญภัย</h2>
+    <div class="steps" id="steps"></div>
+    <button class="btn" id="btn-howto-start">เข้าใจแล้ว เริ่มเลย 🥾</button>
+  </section>
+
+  <section class="screen" id="s-trails">
+    <div class="hud-top"><button class="backlink" id="btn-trails-back">← กลับ</button><span>THE VIEWFINDER</span></div>
+    <div class="kicker">แนะนำเส้นทาง</div>
+    <h2 class="mission-name disp" style="font-size:28px;margin-bottom:6px">เส้นทางเดินป่าที่ต้องลอง</h2>
+    <p class="mission-desc" style="margin:0 0 20px;text-align:left;max-width:none">รวมโดยทีม ส่องรูดูวิว จัดตามฤดูกาลและระดับความยาก เลือกทริปที่ใช่แล้วไปลุยกัน</p>
+    <div class="trail-list" id="trailList"></div>
+    <a class="iglink" href="https://www.instagram.com/theviewfinder.s/" target="_blank" rel="noopener" style="justify-content:center;margin-top:0 auto 8px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      ดูทริปจริงที่ IG @theviewfinder.s
+    </a>
+  </section>
+
+  <section class="screen center" id="s-mission">
+    <div class="hud-top"><span>THE VIEWFINDER</span><span>ขั้นตอน <b>01</b> / 03</span></div>
+    <div class="kicker">ภารกิจของคุณ</div>
+    <div class="mission-icon" id="mission-icon"></div>
+    <h2 class="mission-name disp" id="mission-name">—</h2>
+    <p class="mission-desc" id="mission-desc">—</p>
+    <div class="mission-hint" id="mission-hint">🎒 เลือกของให้เหมาะกับภารกิจนี้ ภายใน 1 นาที</div>
+    <button class="btn" id="btn-pack">เริ่มแพ็คของ</button>
+  </section>
+
+  <section class="screen" id="s-pack">
+    <div>
+      <div class="pack-hud">
+        <span class="pack-title" id="pack-mission-tag">ภารกิจ: —</span>
+      </div>
+      <p class="pack-mission-desc" id="pack-mission-desc">—</p>
+      <div class="timer-wrap">
+        <div class="timer-track"><div class="timer-fill" id="timer-fill"></div></div>
+        <span class="timer-num" id="timer-num">30</span>
+      </div>
+      <p class="pack-sub">แตะเลือกของที่จะพกไป สูงสุด 8 ชิ้น</p>
+      <div class="slots" id="slots"></div>
+    </div>
+    <div>
+      <div class="grid" id="grid"></div>
+      <div class="pack-cta">
+        <button class="btn" id="btn-goscore" disabled>ไปดูผลกันเลย</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen center" id="s-result">
+    <div class="kicker">คะแนนผจญภัย</div>
+    <div class="ring-wrap">
+      <svg width="180" height="180" viewBox="0 0 180 180">
+        <circle cx="90" cy="90" r="80" fill="none" stroke="#242424" stroke-width="10"/>
+        <circle cx="90" cy="90" r="80" fill="none" stroke="#FFD400" stroke-width="10" stroke-linecap="round"
+          id="ring-progress" stroke-dasharray="502.4" stroke-dashoffset="502.4"/>
+      </svg>
+      <div class="ring-num"><b id="score-num">0</b><span>/ 100</span></div>
+    </div>
+    <div class="badge"><span class="ic" id="pers-icon"></span><b id="pers-name">—</b></div>
+    <p class="pers-tag" id="pers-tag">—</p>
+    <p class="pers-sub" id="pers-desc">—</p>
+    <div class="trip-card">
+      <div class="tn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 L20 20 L12 16 L4 20 Z"/></svg></div>
+      <div><div class="tk">เส้นทางแนะนำสำหรับคุณ</div><div class="tt" id="trip-name">—</div></div>
+    </div>
+    <button class="btn" id="btn-tochest">เปิดกล่องรางวัล</button>
+  </section>
+
+  <section class="screen center" id="s-chest">
+    <div class="kicker">กระเป๋ารางวัล</div>
+    <h2 class="mission-name disp" style="font-size:26px;margin-bottom:4px">แตะเพื่อเปิดกระเป๋า</h2>
+    <div class="chest-zone">
+      <div class="chest" id="chest">
+        <div class="glow"></div>
+        <svg viewBox="0 0 100 100">
+          <path d="M30 32 Q22 52 26 86" fill="none" stroke="#5A5A5A" stroke-width="5" stroke-linecap="round"/>
+          <path d="M70 32 Q78 52 74 86" fill="none" stroke="#5A5A5A" stroke-width="5" stroke-linecap="round"/>
+          <path d="M23 48 Q23 40 31 38 L69 38 Q77 40 77 48 L79 82 Q79 90 71 90 L29 90 Q21 90 21 82 Z" fill="#242424" stroke="#5A5A5A" stroke-width="2"/>
+          <rect x="32" y="63" width="36" height="23" rx="8" fill="#1A1A1A" stroke="#5A5A5A" stroke-width="1.5"/>
+          <path d="M36 68 L64 68" stroke="#FFD400" stroke-width="1.5" stroke-dasharray="2.5 2.5" opacity=".7"/>
+          <ellipse cx="50" cy="47" rx="25" ry="7" fill="#0b0b0b"/>
+          <path d="M43 30 Q50 23 57 30" fill="none" stroke="#5A5A5A" stroke-width="3.5" stroke-linecap="round"/>
+          <g class="lid">
+            <path d="M23 48 Q23 30 50 26 Q77 30 77 48 Z" fill="#2E2E2E" stroke="#5A5A5A" stroke-width="2"/>
+            <rect x="45" y="40" width="10" height="15" rx="2.5" fill="#FFD400" stroke="#C97F2C" stroke-width="1"/>
+          </g>
+        </svg>
+      </div>
+      <p class="chest-hint" id="chest-hint">แตะที่กระเป๋าเลย 👆</p>
+      <div class="reward-pop" id="reward-pop">
+        <div class="reward-tag" id="reward-tag">—</div>
+        <div class="rn" id="reward-name">—</div>
+        <a class="lineclaim" href="https://liff.line.me/1645278921-kWRPP32q/?accountId=hus1597t" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 6.8 0 10-3.8 5.6l3.8 1.4-1-3.3a6.7 5.4 0 001-3.7z"/></svg>
+          เพิ่มเพื่อน LINE รับรางวัล
+        </a>
+        <p class="quota-note" id="quota-note" style="display:none">ของรางวัลใหญ่มีจำกัดจำนวนต่อวัน ระบบจะยืนยันสิทธิ์ตามลำดับที่มาแลกจริงที่บูธ</p>
+      </div>
+    </div>
+    <button class="btn" id="btn-topassport" style="display:none">ดูพาสปอร์ตของคุณ</button>
+  </section>
+
+  <section class="screen center" id="s-passport">
+    <div class="kicker">พาสปอร์ตนักผจญภัย</div>
+    <div class="passport-canvas-wrap">
+      <canvas id="passportCanvas" width="1080" height="1920" style="display:none"></canvas>
+      <img id="passportImg" alt="พาสปอร์ตนักผจญภัยของคุณ" />
+    </div>
+    <p class="save-hint">📌 กดค้างที่รูปด้านบน แล้วเลือก "บันทึกรูปภาพ" หรือ "แชร์" ได้เลย</p>
+    <button class="dl-mini" id="btn-download">⬇ ดาวน์โหลดรูป</button>
+
+    <p class="follow-label">ชอบเกมนี้ไหม? ติดตามเราไว้ ไม่พลาดทริปหน้า</p>
+    <a class="btn followig" href="https://www.instagram.com/theviewfinder.s/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      ติดตาม @theviewfinder.s
+    </a>
+    <a class="lineclaim" href="https://liff.line.me/1645278921-kWRPP32q/?accountId=hus1597t" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 6.8 0 10-3.8 5.6l3.8 1.4-1-3.3a6.7 5.4 0 001-3.7z"/></svg>
+      เพิ่มเพื่อน LINE
+    </a>
+    <button class="btn ghost" id="btn-restart">เล่นอีกครั้ง ↻</button>
+  </section>
+
+</div>
+
+<div class="toast" id="toast">เต็ม 8 ชิ้นแล้ว — เอาชิ้นอื่นออกก่อนนะ</div>
+
+<script>
+const PACK_TIME = 60;
+const MAX_ITEMS = 8;
+const SCORE_THRESHOLD = 90;
+const GRAND_PRIZE = { name:"Banana Energy Bar ส่องรูดูวิว" };  // คะแนน >= SCORE_THRESHOLD (ของจริงคือกล้วยตาก)
+const CONSOLATION_PRIZE = { name:"สติกเกอร์ส่องรูดูวิว" };  // คะแนนต่ำกว่านั้น (คงที่ ไม่สุ่มอีกต่อไป)
+
+const ICONS = {
+  camera:  `<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7l1.6-2.4h4.8L16 7"/><circle cx="12" cy="13.5" r="3.6"/>`,
+  battery: `<rect x="3" y="8" width="16" height="9" rx="1.6"/><rect x="19.5" y="11" width="1.8" height="3"/><line x1="7" y1="8" x2="7" y2="17" stroke-dasharray="2 1.5" opacity=".5"/>`,
+  water:   `<path d="M12 3C9 8 5.5 11.8 5.5 15.2A6.5 6.5 0 0012 21.7a6.5 6.5 0 006.5-6.5C18.5 11.8 15 8 12 3z"/>`,
+  boots:   `<path d="M8 3v9.5c0 1-.5 1.6-1.3 2.3L4 17.2c-.6.5-.9 1-.9 1.8V20h9.5v-3.2c0-1 .4-1.4 1.3-1.4H20V13h-4.5c-1 0-1.5-.5-1.5-1.5V3z"/>`,
+  rainjacket:`<path d="M9 3.5L12 5l3-1.5 3 2.6-2 2v11.4H8V8.1l-2 2-3-2.6z"/><path d="M9 3.5a3 3 0 006 0" fill="none"/>`,
+  headlamp:`<circle cx="12" cy="10" r="4"/><path d="M4 13c2-1.5 5-2.3 8-2.3s6 .8 8 2.3" fill="none"/><path d="M4 13v6M20 13v6" fill="none"/>`,
+  firstaid:`<rect x="3" y="6" width="18" height="14" rx="2.5"/><path d="M9 6V4.6A1.6 1.6 0 0110.6 3h2.8A1.6 1.6 0 0115 4.6V6" fill="none"/><path d="M12 10v6M9 13h6" stroke-width="2"/>`,
+  energybar:`<rect x="4" y="8" width="16" height="9" rx="2"/><path d="M4 8l4.5 9M9 8l4.5 9M14 8l4.5 9" fill="none" opacity=".6"/>`,
+  compass: `<circle cx="12" cy="12" r="9"/><path d="M15 9l-4.5 1.5L9 15l4.5-1.5z" fill="currentColor" stroke="none"/>`,
+  map:     `<path d="M9 4L3 6.5v14L9 18l6 2.5 6-2.5v-14L15 6.5 9 4z"/><path d="M9 4v14M15 6.5v14" fill="none"/>`,
+  pizza:   `<path d="M12 3l9 16.5H3z"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="10" cy="15.5" r="1" fill="currentColor" stroke="none"/><circle cx="14" cy="15.5" r="1" fill="currentColor" stroke="none"/>`,
+  tv:      `<rect x="3" y="5" width="18" height="12" rx="1.6"/><path d="M9 20h6M12 17v3" fill="none"/>`,
+  gamepad: `<rect x="2.5" y="8" width="19" height="9" rx="4.5"/><path d="M7 10.5v4M5 12.5h4" fill="none"/><circle cx="16" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="18.5" cy="13.5" r="1" fill="currentColor" stroke="none"/>`,
+  pillow:  `<path d="M4 8c0-2 2-3 4-2 1.3.7 2 .7 3.3 0 1.7-1 4-1 4.7 1 .8 2.3 0 3.5-1.3 4-1.3.5-1.3 1.7 0 2.3 1.3.6 2 2 1.3 3.7-.8 1.7-3 2-4.7 1-1.3-.7-2-.7-3.3 0-2 1-4 0-4-2s.7-2.3 0-3.7C3.3 11 3.3 9.3 4 8z"/>`,
+  teddy:   `<circle cx="12" cy="14" r="6.5"/><circle cx="6" cy="6.5" r="2.6"/><circle cx="18" cy="6.5" r="2.6"/><circle cx="9.6" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="14.4" cy="13" r="1" fill="currentColor" stroke="none"/>`,
+  sun:     `<circle cx="12" cy="12" r="4.2"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" fill="none"/>`,
+  cloud:   `<path d="M6.5 17a4 4 0 01-.5-8 5.5 5.5 0 0110.6-1.6A4.5 4.5 0 0117.5 17h-11z"/><path d="M8 20l-1 2M12.5 20l-1 2M17 20l-1 2" fill="none"/>`,
+  flame:   `<path d="M12 3c1 3-3 4.5-3 8a3.5 3.5 0 007 0c0-1.5-1-2-1-3.2.8 1 1.5 2.4 1.5 4A4.5 4.5 0 018 11.8C8 8 12 6.5 12 3z"/>`,
+  star:    `<path d="M12 3l2.6 5.8L21 9.5l-4.6 4.3L17.6 21 12 17.6 6.4 21l1.2-7.2L3 9.5l6.4-.7z"/>`,
+  globe:   `<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M4.3 7.5h15.4M4.3 16.5h15.4" fill="none"/>`,
+};
+
+const ITEMS = [
+  {key:"camera",   label:"กล้อง",         junk:false},
+  {key:"battery",  label:"แบตเตอรี่",     junk:false},
+  {key:"water",    label:"น้ำดื่ม",       junk:false},
+  {key:"boots",    label:"รองเท้าลุย",    junk:false},
+  {key:"rainjacket",label:"เสื้อกันฝน",   junk:false},
+  {key:"headlamp", label:"ไฟคาดหัว",     junk:false},
+  {key:"firstaid", label:"ปฐมพยาบาล",    junk:false},
+  {key:"energybar",label:"เอนเนอร์จี้บาร์",junk:false},
+  {key:"compass",  label:"เข็มทิศ",       junk:false},
+  {key:"map",      label:"แผนที่",        junk:false},
+  {key:"pizza",    label:"พิซซ่า",        junk:true},
+  {key:"tv",       label:"ทีวี",          junk:true},
+  {key:"gamepad",  label:"เครื่องเกม",    junk:true},
+  {key:"pillow",   label:"หมอน",          junk:true},
+  {key:"teddy",    label:"ตุ๊กตาหมี",     junk:true},
+];
+
+const MISSIONS = [
+  {key:"rain",  name:"ฝนตกหนัก",     desc:"ฝนตกหนักตลอดเส้นทาง สิ่งกันน้ำและการมองเห็นคือกุญแจสำคัญ", key_items:["rainjacket","map","firstaid","boots"], icon:"rainjacket"},
+  {key:"river", name:"ข้ามลำธาร",    desc:"ต้องลุยข้ามลำธารหลายจุดระหว่างทาง พื้นลื่นและกระแสน้ำแรง", key_items:["boots","map","compass","firstaid"], icon:"boots"},
+  {key:"cold",  name:"อากาศหนาวจัด", desc:"อากาศหนาวจัดตลอดคืน อุณหภูมิลดฮวบหลังพระอาทิตย์ตก", key_items:["rainjacket","boots","firstaid","energybar"], icon:"rainjacket"},
+  {key:"sunrise",name:"ล่าแสงอรุณ",  desc:"ต้องตื่นก่อนฟ้าสว่างเพื่อไปรอแสงแรกของวันบนยอดเขา", key_items:["camera","battery","headlamp","energybar"], icon:"camera"},
+  {key:"windy", name:"ยอดเขาลมแรง",  desc:"ลมกระโชกแรงบนสันเขา ทัศนวิสัยเปลี่ยนแปลงไว", key_items:["rainjacket","boots","compass","map"], icon:"compass"},
+  {key:"night", name:"เดินป่ายามค่ำ",desc:"เดินป่ากลางคืนไร้แสงจันทร์ ต้องพึ่งพาตัวเองเต็มที่", key_items:["headlamp","battery","map","compass"], icon:"headlamp"},
+];
+
+/* ระบบ "ระดับนักผจญภัย" — ผูกตรงกับคะแนน 0-100 (ไม่มีการนับแต้มสะสมที่เอนเอียงได้อีกต่อไป)
+   trailCategory ต้องตรงกับ "title" ใน TRAILS ด้านล่าง เพื่อสุ่มเส้นทางจริงมาแนะนำ */
+const TIERS = [
+  {key:"rookie",   min:0,  name:"มือใหม่", tag:"ก้าวแรกของนักผจญภัย",
+   th:"หัวใจพร้อมลุยเต็มร้อย แต่ของในกระเป๋ายังไม่ครบเป๊ะ ไม่เป็นไรเลย ทุกตำนานเริ่มจากก้าวแรกเสมอ",
+   emoji:"🌱", accent:"#B9E4C9", trailCategory:"ป่ามือใหม่"},
+  {key:"casual",   min:30, name:"เดินป่ามาบ้าง", tag:"สายชิลที่พกของถูกจุด",
+   th:"รู้จักเลือกของที่จำเป็น ไปแบบสบาย ๆ ไม่ตื่นตระหนก มีของติดตัวครบในระดับหนึ่งแล้ว",
+   emoji:"🥾", accent:"#4FD1C5", trailCategory:"ป่าใต้ หน้าร้อน · นอนเปล"},
+  {key:"regular",  min:55, name:"เดินป่าบ่อย", tag:"มือโปรที่ธรรมชาติไว้ใจ",
+   th:"อ่านภารกิจขาด เตรียมของแม่นยำ ต่อให้ฝนตกหรือทางชัน ก็รับมือได้แบบไม่ประหม่า",
+   emoji:"🏔️", accent:"#FF8A3D", trailCategory:"ป่าหน้าฝน", trailCategory2:"ป่าต่างประเทศ"},
+  {key:"hardcore", min:80, name:"ขาโหดขาประจำ", tag:"ตำนานที่ภูเขาต้องจดจำ",
+   th:"ไม่มีภารกิจไหนเอาชนะคุณได้ เตรียมของแม่นทุกกระเบียดนิ้ว ระดับที่นักเดินป่าตัวจริงใฝ่ฝัน",
+   emoji:"🔥", accent:"#FF6B81", trailCategory:"ป่ามือโหด", trailCategory2:"ป่าต่างประเทศ"},
+];
+function computeTier(sc){
+  let result=TIERS[0];
+  for(const t of TIERS){ if(sc>=t.min) result=t; }
+  return result;
+}
+function pickTrailFor(tier){
+  const cat1=TRAILS.find(t=>t.title===tier.trailCategory);
+  const cat2=tier.trailCategory2 ? TRAILS.find(t=>t.title===tier.trailCategory2) : null;
+  const pool=[...(cat1?cat1.items:[]), ...(cat2?cat2.items:[])];
+  if(!pool.length) return "ส่องรูดูวิว";
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+const STEPS = [
+  {n:"1", t:"รับภารกิจสุ่ม", d:"ระบบสุ่มภารกิจให้ 1 อย่าง เช่น ฝนตกหนัก หรือ ล่าแสงอรุณ อ่านให้ดีว่าต้องเจอกับอะไร"},
+  {n:"2", t:"แพ็คของภายใน 1 นาที", d:"เลือกของให้เหมาะกับภารกิจ สูงสุด 8 ชิ้นจาก 15 ชิ้น ระวังของหลอกที่ไม่ช่วยอะไรเลย เช่น พิซซ่า ทีวี"},
+  {n:"3", t:"ดูคะแนน + บุคลิก", d:"ยิ่งเลือกของตรงภารกิจ ยิ่งได้คะแนนสูง พร้อมรับบุคลิกนักผจญภัยประจำตัวคุณ"},
+  {n:"4", t:"เปิดกล่องรับรางวัล", d:"คะแนนถึง 90 รับกระเป๋าเป้เดินป่าไปเลย! ต่ำกว่านั้นยังมีของรางวัลร่วมสนุกให้เสมอ แล้วดาวน์โหลด/แชร์พาสปอร์ตของคุณได้"},
+];
+
+const TRAILS = [
+  {icon:"sun",   title:"ป่าใต้ หน้าร้อน · นอนเปล", items:["เขาเหมน","เขาหลวงนครศรี","เขาพ่อตาโชงโดง"]},
+  {icon:"cloud", title:"ป่าหน้าฝน", items:["ลานสนภูสอยดาว","ดอยหลวงตาก","ดอยห้วยทู่","ดอยหลวงแม่ละเมา","ภูเขาควาย สปป.ลาว",
+    "ป่าใต้ เขาเจ็ดยอด","เขาลอน หนานญี่ปุ่น","ดอยมด","ดอยหลวง ดอยหนอก","ดอยลังกาน้อย ลังกาหลวง"]},
+  {icon:"boots", title:"ป่ามือใหม่", items:["ดอยม่อนจอง","ม่อนกองข้าว","โบลาเวน ลาวใต้","เปรโต๊ะลอซู",
+    "น้ำตกตะโด๊ะกุย วาแหมะคี","น้ำตกผาแตก","เขาสันหนอกวัว","ดอยขุนตาล","เขาหลวงสุโขทัย","พือหน่วยเลลอซู ตาก",
+    "น้ำตกห้วยน้ำเย็น อมก๋อย","เดินป่าล่องเรือขุนน้ำเงา"]},
+  {icon:"flame", title:"ป่ามือโหด", items:["ป่าคลองยัน","เขาโมโกจู","ภูเขาควาย สปป.ลาว","เด่นช้างนอน",
+    "เขาพนมเบญจา","ป่าเขาสันกาลาคีรี","ภูเมี่ยง","ขุนน้ำเงา 100 กิโลเมตร"]},
+  {icon:"globe", title:"ป่าต่างประเทศ", items:[
+    "🇳🇵 Mardi Himal เนปาล","🇳🇵 ABC เนปาล","🇮🇩 Bromo Ijen อินโดนีเซีย",
+    "🇮🇳 Hampta Pass อินเดีย","🇳🇵 Langtang เนปาล","🇮🇳 Kashmir Great Lakes อินเดีย",
+    "🇮🇩 Rinjani อินโดนีเซีย","🇮🇩 Kerinci อินโดนีเซีย","🇳🇵 EBC เนปาล","🇳🇵 Manaslu Circuit เนปาล"]},
+  {icon:"star",  title:"ป่าที่ต้องไปสักครั้ง", items:["ดอยหลวงเชียงดาว","เขาช้างเผือก","ภูกระดึง","ม่อนสี่สหาย","หวาว่าโจ","ดอยทูเล","จอวาเล"], featured:true},
+];
+
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+const show=id=>{$$(".screen").forEach(s=>s.classList.remove("on"));$(id).classList.add("on");window.scrollTo(0,0);};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const svgIcon=(key,extra="")=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" ${extra}>${ICONS[key]}</svg>`;
+
+let mission=null, selected=new Set(), timeLeft=PACK_TIME, timerId=null, score=0, tier=null, tripPick=null, reward=null;
+function syncDebug(){ window.__tvf = {mission, score, tier, tripPick, reward, selected:[...selected]}; }
+
+(function initDust(){
+  const layer=$("#dustLayer"); const N=22;
+  for(let i=0;i<N;i++){
+    const d=document.createElement("span"); d.className="dust";
+    const size=1.5+Math.random()*2.5;
+    d.style.width=size+"px"; d.style.height=size+"px";
+    d.style.left=Math.random()*100+"%";
+    d.style.top=Math.random()*100+"%";
+    d.style.opacity=(0.15+Math.random()*0.35).toFixed(2);
+    const dur=(14+Math.random()*18).toFixed(1);
+    const delay=(-Math.random()*20).toFixed(1);
+    d.style.animation=`floatDust ${dur}s ease-in-out ${delay}s infinite`;
+    layer.appendChild(d);
+  }
+  const style=document.createElement("style");
+  style.textContent=`@keyframes floatDust{0%,100%{transform:translate(0,0)}50%{transform:translate(6px,-22px)}}`;
+  document.head.appendChild(style);
+})();
+
+document.addEventListener("click",e=>{
+  const btn=e.target.closest(".btn:not(.ghost)"); if(!btn)return;
+  const r=btn.getBoundingClientRect(); const rip=document.createElement("span");
+  rip.className="ripple"; const size=Math.max(r.width,r.height);
+  rip.style.width=rip.style.height=size+"px";
+  rip.style.left=(e.clientX-r.left-size/2)+"px"; rip.style.top=(e.clientY-r.top-size/2)+"px";
+  btn.appendChild(rip); setTimeout(()=>rip.remove(),600);
+});
+
+function renderSteps(){
+  const box=$("#steps"); if(box.dataset.done)return; box.dataset.done="1";
+  STEPS.forEach(s=>{
+    const el=document.createElement("div"); el.className="step-card";
+    el.innerHTML=`<span class="sn">${s.n}</span><div><div class="st">${s.t}</div><div class="sd">${s.d}</div></div>`;
+    box.appendChild(el);
+  });
+}
+function renderTrails(){
+  const box=$("#trailList"); if(box.dataset.done)return; box.dataset.done="1";
+  TRAILS.forEach(t=>{
+    const card=document.createElement("div"); card.className="trail-card"+(t.featured?" featured":"");
+    const chips=t.items.map(i=>`<span class="chip">${i}</span>`).join("");
+    card.innerHTML=`<div class="trail-head"><span class="tn">${svgIcon(t.icon)}</span><span class="tt">${t.title}</span></div><div class="chips">${chips}</div>`;
+    box.appendChild(card);
+  });
+}
+function goHowTo(){ renderSteps(); show("#s-howto"); }
+function goTrails(){ renderTrails(); show("#s-trails"); }
+
+function goMission(){
+  mission=shuffle(MISSIONS)[0];
+  $("#mission-name").textContent=mission.name;
+  $("#mission-desc").textContent=mission.desc;
+  $("#mission-icon").innerHTML=svgIcon(mission.icon);
+  syncDebug();
+  show("#s-mission");
+}
+
+function goPack(){
+  selected=new Set(); timeLeft=PACK_TIME;
+  $("#pack-mission-tag").textContent="ภารกิจ: "+mission.name;
+  $("#pack-mission-desc").textContent=mission.desc;
+  renderSlots(); renderGrid(); updateGoBtn();
+  $("#timer-num").textContent=timeLeft; $("#timer-num").classList.remove("warn");
+  $("#timer-fill").style.width="100%"; $("#timer-fill").classList.remove("warn");
+  show("#s-pack");
+  clearInterval(timerId);
+  timerId=setInterval(()=>{
+    timeLeft--;
+    $("#timer-num").textContent=Math.max(timeLeft,0);
+    $("#timer-fill").style.width=Math.max(0,(timeLeft/PACK_TIME)*100)+"%";
+    if(timeLeft<=5){$("#timer-num").classList.add("warn");$("#timer-fill").classList.add("warn");}
+    if(timeLeft<=0){clearInterval(timerId);goScore();}
+  },1000);
+}
+function renderSlots(){
+  const box=$("#slots");box.innerHTML="";
+  for(let i=0;i<MAX_ITEMS;i++){const s=document.createElement("div");s.className="slot"+(i<selected.size?" filled":"");box.appendChild(s);}
+}
+function renderGrid(){
+  const box=$("#grid");box.innerHTML="";
+  const order=shuffle(ITEMS);
+  order.forEach(it=>{
+    const el=document.createElement("div"); el.className="item"; el.dataset.key=it.key;
+    el.innerHTML=`${svgIcon(it.key)}<span class="lb">${it.label}</span><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></span>`;
+    el.addEventListener("click",()=>toggleItem(it,el));
+    box.appendChild(el);
+  });
+}
+function toggleItem(it,el){
+  if(selected.has(it.key)){ selected.delete(it.key); el.classList.remove("selected"); }
+  else{
+    if(selected.size>=MAX_ITEMS){ el.classList.add("shake"); showToast(); setTimeout(()=>el.classList.remove("shake"),350); return; }
+    selected.add(it.key); el.classList.add("selected");
+  }
+  renderSlots(); updateGoBtn();
+  document.querySelectorAll(".item").forEach(e=>{
+    const full = selected.size>=MAX_ITEMS && !e.classList.contains("selected");
+    e.classList.toggle("full-block", full);
+  });
+}
+function updateGoBtn(){ $("#btn-goscore").disabled = selected.size===0; }
+let toastT=null;
+function showToast(){ const t=$("#toast"); t.classList.add("on"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("on"),1600); }
+
+function computeScore(){
+  let s=6;
+  selected.forEach(key=>{
+    const it=ITEMS.find(i=>i.key===key);
+    if(it.junk) s-=12;
+    else if(mission.key_items.includes(key)) s+=20;
+    else s+=6;
+  });
+  return Math.max(0,Math.min(100,Math.round(s)));
+}
+function makeCode(){const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<5;i++)s+=c[(Math.random()*c.length)|0];return "TVF-"+s;}
+
+function goScore(){
+  clearInterval(timerId);
+  score=computeScore();
+  tier=computeTier(score);
+  tripPick=pickTrailFor(tier);
+  $("#pers-name").textContent=tier.name;
+  $("#pers-tag").textContent=tier.tag;
+  $("#pers-desc").textContent=tier.th;
+  $("#pers-icon").innerHTML=svgIcon("compass","style='width:14px;height:14px'");
+  $("#trip-name").textContent=tripPick;
+  syncDebug();
+  show("#s-result");
+  animateRing(score);
+}
+function animateRing(target){
+  const circ=502.4; const ring=$("#ring-progress"); const numEl=$("#score-num");
+  const dur=1100; const t0=performance.now();
+  function step(t){
+    const p=Math.min(1,(t-t0)/dur); const eased=1-Math.pow(1-p,3);
+    const val=Math.round(eased*target);
+    numEl.textContent=val;
+    ring.setAttribute("stroke-dashoffset", circ-(circ*eased*target/100));
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function goChest(){
+  reward=null;
+  $("#chest").classList.remove("open","grand");
+  $("#reward-pop").classList.remove("on");
+  $("#chest-hint").style.display="block";
+  $("#btn-topassport").style.display="none";
+  show("#s-chest");
+}
+function openChest(){
+  if(reward)return;
+  const isGrand = score>=SCORE_THRESHOLD;
+  const picked = isGrand ? GRAND_PRIZE : CONSOLATION_PRIZE;
+  reward={ name:picked.name, tier:isGrand?"grand":"consolation" };
+  syncDebug();
+  $("#chest").classList.add("open"); if(isGrand)$("#chest").classList.add("grand");
+  $("#chest-hint").style.display="none";
+  setTimeout(()=>{
+    const tag=$("#reward-tag");
+    tag.textContent = "ของรางวัลร่วมสนุก";
+    tag.className = "reward-tag";
+    $("#reward-name").textContent=reward.name;
+    $("#quota-note").style.display = "none";
+    $("#reward-pop").classList.add("on");
+    $("#btn-topassport").style.display="flex";
+    if(!matchMedia("(prefers-reduced-motion: reduce)").matches) confetti(isGrand);
+  },380);
+}
+
+async function goPassport(){
+  show("#s-passport");
+  await ensureFontsLoaded();
+  drawPassport();
+  syncPassportImg();
+}
+async function ensureFontsLoaded(){
+  const specs=[
+    '700 58px Kanit','600 27px "Bebas Neue"','600 32px Kanit','700 76px Kanit',
+    '700 138px Kanit','500 34px "IBM Plex Sans Thai"','600 30px Kanit','700 74px Kanit',
+    '700 52px Kanit','500 30px "IBM Plex Sans Thai"','500 24px "IBM Plex Sans Thai"',
+  ];
+  try{ await Promise.all(specs.map(f=>document.fonts.load(f))); }catch(e){}
+  try{ if(document.fonts && document.fonts.ready) await document.fonts.ready; }catch(e){}
+}
+async function syncPassportImg(){
+  const cv=$("#passportCanvas");
+  $("#passportImg").src = cv.toDataURL("image/png");
+}
+function hexToRgb(hex){
+  const h=hex.replace("#","");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
+}
+function rgba(hex,a){ const [r,g,bl]=hexToRgb(hex); return `rgba(${r},${g},${bl},${a})`; }
+
+function drawPassport(){
+  const cv=$("#passportCanvas"); const ctx=cv.getContext("2d");
+  const W=cv.width,H=cv.height;
+  const p=tier;
+  const accent=p.accent;
+  const LM=100;              // ระยะขอบซ้าย
+  const contentW=W-LM*2;     // ความกว้างที่ใช้ตัดบรรทัดได้
+
+  ctx.clearRect(0,0,W,H);
+
+  // พื้นหลังเรียบเหมือนหน้า Home
+  const bgGrad=ctx.createLinearGradient(0,0,0,H);
+  bgGrad.addColorStop(0,"#181614"); bgGrad.addColorStop(0.5,"#100e0c"); bgGrad.addColorStop(1,"#0a0908");
+  ctx.fillStyle=bgGrad; roundRect(ctx,0,0,W,H,52); ctx.fill();
+
+  ctx.save(); ctx.beginPath(); roundRect(ctx,0,0,W,H,52); ctx.clip();
+  ctx.strokeStyle="rgba(255,255,255,.05)"; ctx.lineWidth=2;
+  for(let i=0;i<7;i++){ ctx.beginPath(); ctx.ellipse(W*0.5,H*0.28,90+i*70,64+i*50,.3,0,Math.PI*2); ctx.stroke(); }
+  const glow=ctx.createRadialGradient(W*0.5,560,60, W*0.5,560, W*0.55);
+  glow.addColorStop(0, rgba(accent,0.16)); glow.addColorStop(1, rgba(accent,0));
+  ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
+  ctx.restore();
+
+  ctx.textAlign="left";
+
+  // ---------- แบรนด์ (ขยายใหญ่ขึ้น) ----------
+  const iconD=150, iconR=iconD/2, iconCx=LM+iconR, iconCy=190, textX=LM+iconD+30;
+  drawBadge(ctx, iconCx, iconCy, iconR);
+  ctx.fillStyle="#FFFFFF"; ctx.font="700 58px Kanit, sans-serif";
+  ctx.fillText("ส่องรูดูวิว", textX, iconCy-8);
+  ctx.fillStyle="#9A9A9A"; ctx.font="600 27px Bebas Neue, sans-serif";
+  ctx.fillText("THE VIEWFINDER", textX, iconCy+38);
+
+  // ---------- เนื้อหา ชิดซ้าย ขยายใหญ่ขึ้นทั้งหมด ----------
+  let y = 360;
+  ctx.fillStyle=accent; ctx.font="600 32px Kanit, sans-serif";
+  ctx.fillText("ผลการผจญภัยของฉัน", LM, y);
+
+  y += 110;
+  ctx.fillStyle="#FFFFFF"; ctx.font="700 76px Kanit, sans-serif";
+  ctx.fillText("คุณคือ", LM, y);
+
+  y += 165;
+  ctx.fillStyle=accent; ctx.font="700 138px Kanit, sans-serif";
+  let n = wrapLines(ctx, p.name, LM, y, contentW, 148, 2);
+  y += (n-1)*148 + 100;
+
+  ctx.fillStyle="#C4C4C4"; ctx.font="500 34px IBM Plex Sans Thai, sans-serif";
+  n = wrapLines(ctx, p.th, LM, y, contentW, 50, 3);
+  y += (n-1)*50 + 95;
+
+  ctx.fillStyle=accent; ctx.font="600 30px Kanit, sans-serif";
+  ctx.fillText("คะแนนผจญภัย", LM, y);
+  y += 78;
+  ctx.fillStyle="#FFFFFF"; ctx.font="700 74px Kanit, sans-serif";
+  ctx.fillText(String(score)+" / 100", LM, y);
+  y += 105;
+
+  ctx.fillStyle=accent; ctx.font="600 30px Kanit, sans-serif";
+  ctx.fillText("เส้นทางแนะนำสำหรับคุณ", LM, y);
+  y += 68;
+  ctx.fillStyle="#FFFFFF"; ctx.font="700 52px Kanit, sans-serif";
+  n = wrapLines(ctx, tripPick, LM, y, contentW, 60, 2);
+  y += (n-1)*60 + 100;
+
+  ctx.fillStyle="#8A8A8A"; ctx.font="500 30px IBM Plex Sans Thai, sans-serif";
+  ctx.fillText("IG @theviewfinder.s", LM, y);
+  y += 56;
+
+  ctx.fillStyle="#5A5A5A"; ctx.font="500 24px IBM Plex Sans Thai, sans-serif";
+  n = wrapLines(ctx, "#ส่องรูดูวิว  #TheViewfinder  #PackYourAdventure", LM, y, contentW, 34, 2);
+  y += (n-1)*34 + 60;
+
+  // ---------- Footer: ภาพเทือกเขา topo เติมพื้นที่ว่างด้านล่างให้เต็มการ์ด ----------
+  drawTopoFooter(ctx, 0, y, W, H-40-y, accent);
+
+  function wrapLines(ctx,text,x,yStart,maxW,lineHeight,maxLines){
+    const lines=[]; let remaining=text.trim();
+    while(remaining.length>0 && lines.length<maxLines){
+      if(ctx.measureText(remaining).width<=maxW){ lines.push(remaining); remaining=""; break; }
+      if(lines.length===maxLines-1){ lines.push(remaining); remaining=""; break; }
+      let lo=1,hi=remaining.length,best=1;
+      while(lo<=hi){
+        const mid=(lo+hi)>>1;
+        if(ctx.measureText(remaining.slice(0,mid)).width<=maxW){ best=mid; lo=mid+1; } else { hi=mid-1; }
+      }
+      // เลี่ยงตัดกลางคำ: ถ้ามีช่องว่างอยู่ไม่ไกลจากจุดตัดที่วัดได้ ให้ตัดตรงช่องว่างแทน
+      const spaceIdx = remaining.lastIndexOf(" ", best);
+      if(spaceIdx > best*0.4) best = spaceIdx;
+      lines.push(remaining.slice(0,best));
+      remaining=remaining.slice(best).trim();
+    }
+    lines.forEach((line,i)=>ctx.fillText(line, x, yStart+i*lineHeight));
+    return lines.length;
+  }
+
+  function drawTopoFooter(ctx,x0,y0,w,h,accent){
+    if(h<=40) return; // พื้นที่ไม่พอ ข้ามไปเลย ไม่บังคับวาดจนล้น
+    ctx.save();
+    ctx.beginPath(); ctx.rect(x0,y0,w,h); ctx.clip();
+    const layers=[
+      {pts:[0,.58, .16,.30, .32,.50, .50,.14, .68,.44, .84,.24, 1,.52], yOff:.10, op:.09},
+      {pts:[0,.78, .18,.48, .36,.66, .54,.32, .70,.60, .88,.40, 1,.72], yOff:.32, op:.14},
+      {pts:[0,.92, .22,.66, .42,.80, .58,.55, .76,.78, 1,.60], yOff:.55, op:.22},
+    ];
+    layers.forEach(L=>{
+      ctx.beginPath(); ctx.moveTo(x0,y0+h);
+      for(let i=0;i<L.pts.length;i+=2){
+        const px=x0+L.pts[i]*w, py=y0+h*L.yOff+L.pts[i+1]*h*(1-L.yOff);
+        ctx.lineTo(px,py);
+      }
+      ctx.lineTo(x0+w,y0+h); ctx.closePath();
+      ctx.fillStyle=rgba(accent,L.op); ctx.fill();
+    });
+    ctx.strokeStyle=rgba(accent,.22); ctx.lineWidth=2;
+    for(let i=0;i<5;i++){
+      ctx.beginPath();
+      ctx.ellipse(x0+w*0.5, y0+h*1.02, w*0.22+i*90, h*0.30+i*22, 0, Math.PI, Math.PI*2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+}
+function drawBadge(ctx,cx,cy,r){
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip();
+  const x0=cx-r, y0=cy-r, size=r*2;
+  ctx.fillStyle="#FFD400"; ctx.fillRect(x0,y0,size,size*0.58);
+  ctx.fillStyle="#111111"; ctx.fillRect(x0,y0+size*0.58,size,size*0.42);
+  ctx.beginPath();
+  ctx.moveTo(x0, y0+size*0.64);
+  ctx.lineTo(x0+size*0.22, y0+size*0.32);
+  ctx.lineTo(x0+size*0.34, y0+size*0.48);
+  ctx.lineTo(x0+size*0.50, y0+size*0.16);
+  ctx.lineTo(x0+size*0.64, y0+size*0.44);
+  ctx.lineTo(x0+size*0.80, y0+size*0.26);
+  ctx.lineTo(x0+size, y0+size*0.64);
+  ctx.lineTo(x0+size, y0+size);
+  ctx.lineTo(x0, y0+size);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle="#FAFAFA";
+  ctx.beginPath(); ctx.moveTo(x0+size*0.46,y0+size*0.24); ctx.lineTo(x0+size*0.54,y0+size*0.34); ctx.lineTo(x0+size*0.40,y0+size*0.40); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(x0+size*0.60,y0+size*0.32); ctx.lineTo(x0+size*0.68,y0+size*0.40); ctx.lineTo(x0+size*0.56,y0+size*0.44); ctx.closePath(); ctx.fill();
+  ctx.restore();
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.strokeStyle="#FFD400"; ctx.lineWidth=3; ctx.stroke();
+}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function roundRectTop(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x,y+h);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h);ctx.closePath();}
+
+function downloadPassport(){
+  const cv=$("#passportCanvas");
+  cv.toBlob(blob=>{
+    if(!blob){ // สำรอง: บางเบราว์เซอร์ toBlob ไม่ผ่าน ใช้ dataURL แทน
+      const a=document.createElement("a");
+      a.download="the-viewfinder-passport.png"; a.href=cv.toDataURL("image/png");
+      document.body.appendChild(a); a.click(); a.remove();
+      return;
+    }
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.download="the-viewfinder-passport.png"; a.href=url;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+  },"image/png");
+}
+async function sharePassport(){
+  const cv=$("#passportCanvas");
+  try{
+    const blob = await new Promise(res=>cv.toBlob(res,"image/png"));
+    if(!blob) throw new Error("toBlob failed");
+    const file=new File([blob],"the-viewfinder-passport.png",{type:"image/png"});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:"The Viewfinder",text:"พาสปอร์ตนักผจญภัยของฉันจาก ส่องรูดูวิว 🏔️ @theviewfinder.s"});
+    }else{
+      downloadPassport();
+    }
+  }catch(e){
+    if(e && e.name==="AbortError") return; // ผู้ใช้กดยกเลิกเอง ไม่ต้องทำอะไรต่อ
+    downloadPassport();
+  }
+}
+
+function confetti(big){
+  const c=document.createElement("canvas");c.className="confetti";document.body.appendChild(c);
+  const ctx=c.getContext("2d");if(!ctx){c.remove();return;}c.width=innerWidth;c.height=innerHeight;
+  const cols=["#FFD400","#FAFAFA","#5A5A5A"];const N=big?110:60;
+  const P=Array.from({length:N},()=>({x:innerWidth/2,y:innerHeight*0.45,s:4+Math.random()*6,
+    vx:-6+Math.random()*12,vy:-9+Math.random()*4,rot:Math.random()*6,vr:-.3+Math.random()*.6,col:cols[(Math.random()*cols.length)|0]}));
+  let t=0;(function loop(){t++;ctx.clearRect(0,0,c.width,c.height);
+    P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.25;p.rot+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+      ctx.fillStyle=p.col;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s);ctx.restore();});
+    if(t<(big?95:70))requestAnimationFrame(loop);else c.remove();})();
+}
+
+$("#btn-start").addEventListener("click",goHowTo);
+$("#btn-howto-start").addEventListener("click",goMission);
+$("#btn-howto-back").addEventListener("click",()=>show("#s-landing"));
+$("#btn-trails").addEventListener("click",goTrails);
+$("#btn-trails-back").addEventListener("click",()=>show("#s-landing"));
+$("#btn-pack").addEventListener("click",goPack);
+$("#btn-goscore").addEventListener("click",goScore);
+$("#btn-tochest").addEventListener("click",goChest);
+$("#chest").addEventListener("click",openChest);
+$("#btn-topassport").addEventListener("click",goPassport);
+$("#btn-download").addEventListener("click",downloadPassport);
+$("#btn-restart").addEventListener("click",()=>show("#s-landing"));
+</script>
+</body>
+</html>
